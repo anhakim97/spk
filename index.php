@@ -1,4 +1,19 @@
-<?php include('koneksi.php'); ?>
+<?php include('koneksi.php'); 
+$p1 ='';
+$p2 = '';
+$p3= '';
+if (isset($_GET['posisi'])) {
+  $pos = $_GET['posisi'];
+  if ($pos == 1) {
+    $p1 = 'in';
+  }elseif ($pos == 2) {
+    $p2 = 'in';
+  }elseif ($pos == 3) {
+    $p3 = 'in';
+  }
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,18 +48,9 @@ $(document).ready(function(){
   <h2>Selamat Datang di Aplikasi SPK</h2>
   <p><strong></strong> Metode TOPSIS</p>
   <div style="width: 100%; margin-left: 0px; text-align: right;">
-    <form method="post" action="index.php">
-      <button type="button" class="btn btn-danger" name="deletedata" ><span class="glyphicon glyphicon-trash"></span>Reset Semua Data</button><br></div>
-    </form>
-  <?php 
-    if(isset($_POST['deletedata'])){
-      echo "<script>alert('haiiiiiiii');</script>";
-      mysqli_query($koneksi, "DELETE FROM nilai");
-      mysqli_query($koneksi, "DELETE FROM alternatif"); 
-      mysqli_query($koneksi, "DELETE FROM kriteria"); 
-      header("location: index.php");   
-    }
-   ?>
+    <a href="index.php"><button type="button" class="btn btn-danger" name="deletedata" ><span class="glyphicon glyphicon-refresh"></span>Refresh</button></a>
+      <a href="delete.php?deletedata"><button type="button" class="btn btn-danger" name="deletedata" ><span class="glyphicon glyphicon-trash"></span>Reset Semua Dataa</button></a><br>
+    </div>
   <div class="panel-group" id="accordion">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -52,7 +58,7 @@ $(document).ready(function(){
           <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Step 1 ( Tentukan Kriteria )</a>
         </h4>
       </div>
-      <div id="collapse1" class="panel-collapse collapse">
+      <div id="collapse1" class="panel-collapse collapse <?php echo $p1; ?>">
         <div class="panel-body">
           <button id="tambahkriteria" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Tambah</button>  
           <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span>Reset Data</button>
@@ -67,7 +73,7 @@ $(document).ready(function(){
                 width: 50%;
               }
             </style>
-            <form method="post" style="margin-left: 10%; margin-right: 10%;">
+            <form method="post" style="margin-left: 10%; margin-right: 10%; " action="add.php">
               <h2><u>Tambah Kriteria</u></h2>
               <div class="form-group">
                 <label for="kodekriteria">Kode Kriteria:</label>
@@ -94,22 +100,6 @@ $(document).ready(function(){
               <button type="submit" class="btn btn-primary zz" name="submittambahkriteria">Submit</button>
               <button type="button" class="btn btn-danger" id="bataltambahkriteria">Batal</button>
             </form><br><br>
-
-              <?php 
-              if(isset($_POST['submittambahkriteria'])){
-
-                $kodekriteria = $_POST['kodekriteria'];
-                $namakriteria = $_POST['namakriteria'];
-                $atribut = $_POST['atribut'];
-                $bobot = $_POST['bobot'];    
-                $query = mysqli_query($koneksi, "INSERT INTO kriteria (kode_kriteria, nama_kriteria, sifat, bobot) VALUES ('$kodekriteria', '$namakriteria', '$atribut', '$bobot')"); 
-                //echo "<script>alert('Kriteria dengan kode [ ".$kodekriteria." ] Berhasil ditambahkan');</script>";
-                mysqli_close($koneksi);
-                header("location: index.php");             
-                }
-            
-               ?> 
-
           </div>
 
           <table class="table table-striped">
@@ -136,12 +126,79 @@ $(document).ready(function(){
                 <td><?= $kriteria['nama_kriteria'] ?></td>
                 <td><?= $kriteria['sifat'] ?></td>
                 <td><?= $kriteria['bobot'] ?></td>
-                <td>aksi</td>
+                <td>
+                    <a href="index.php?id_kriteria=<?php echo $kriteria['id_kriteria'] ?>&posisi=1"><button title="edit" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-edit"></span></button></a> -
+                    <a href="delete.php?id_kriteria=<?php echo $kriteria['id_kriteria'] ?>"><button title="hapus" type="button" class="btn btn-danger" id="hapuskriteria"><span class="glyphicon glyphicon-trash"></span></button></a>
+                </td>
               </tr>
                  <?php $i++;
                  
                  }
-                 ?>
+                 if (isset($_GET['id_kriteria'])) {
+                  $id_kriteria = $_GET['id_kriteria'];
+                  $query_kriteria_byId = mysqli_query($koneksi, "SELECT * FROM kriteria WHERE id_kriteria = '$id_kriteria'");
+                  while ($kriteria_byId = mysqli_fetch_array($query_kriteria_byId)) { 
+                  ?>
+                      <div id="formeditkriteria" >
+                        <br>
+                        <style type="text/css">
+                          .form-group, .form-check-inline{
+                            padding-left: 10%;
+                          }
+                          .form-control{
+                            width: 50%;
+                          }
+                        </style>
+                        <form method="post" style="margin-left: 10%; margin-right: 10%;" action="update.php">
+                          <h2><u>edit Kriteria</u></h2>
+                          <div class="form-group">
+                            
+                            <label for="kodekriteria">Kode Kriteria:</label><input type="text" name="idkriteria" value="<?= $kriteria_byId['kode_kriteria']; ?>" readonly>
+                            <input type="text" class="form-control" id="kodekriteria" name="kodekriteria" required value="<?= $kriteria_byId['kode_kriteria'] ?>">
+                          </div>
+                          <div class="form-group">
+                            <label for="namakriteria">Nama Kriteria:</label>
+                            <input type="text" class="form-control" id="namakriteria" name="namakriteria" required value="<?= $kriteria_byId['nama_kriteria'] ?>">
+                          </div>
+                          <?php 
+                          $bobot = $kriteria_byId['sifat'];
+                          $cost = '';
+                          $benefit = '';
+                          if ($bobot == 'cost') {
+                            ?>
+                            <div class="form-group">
+                            <label for="sel1">Select list:</label>
+                            <select class="form-control" id="sel1" name="atribut">
+                              <option value="cost">Cost</option>
+                              <option value="benefit">Benefit</option>
+                            </select>
+                          </div>
+                            <?php 
+                          }else{
+                            ?>
+                            <div class="form-group">
+                            <label for="sel1">Select list:</label>
+                            <select class="form-control" id="sel1" name="atribut">
+                              <option value="benefit">Benefit</option>
+                              <option value="cost">Cost</option>
+                            </select>
+                          </div>
+                            <?php 
+                          }
+                           ?>
+                          <div class="form-group">
+                            <label for="namakriteria">Bobot :</label>
+                            <input type="number" class="form-control" id="namakriteria" name="bobot" min="0" value="<?= $kriteria_byId['bobot'] ?>">
+                          </div>
+                          <button type="submit" class="btn btn-primary zz" name="updatekriteria">Update Kriteria</button>
+                          <button type="button" class="btn btn-danger" id="batalupdatekriteria">Batal</button>
+                        </form><br><br>
+                      </div>
+                  <?php
+                  }
+                }
+                  ?>
+
             </tbody>
           </table>
           
@@ -157,7 +214,7 @@ $(document).ready(function(){
           <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Step 2 ( Tentukan Alternatif )</a>
         </h4>
       </div>
-      <div id="collapse2" class="panel-collapse collapse">
+      <div id="collapse2" class="panel-collapse collapse <?php echo $p2; ?>">
         <div class="panel-body">
           <button type="button" class="btn btn-primary" id="tambahalternatif"><span class="glyphicon glyphicon-plus"></span>Tambah</button>  
           <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span>Reset Data</button>
@@ -172,7 +229,7 @@ $(document).ready(function(){
                 width: 50%;
               }
             </style>
-            <form method="post" style="margin-left: 10%; margin-right: 10%;">
+            <form method="post" style="margin-left: 10%; margin-right: 10%;" action="add.php">
               <h2><u>Tambah Alternatif</u></h2>
               <div class="form-group">
                 <label for="kodekriteria">Kode Alternatif:</label>
@@ -185,20 +242,7 @@ $(document).ready(function(){
               <button type="submit" class="btn btn-primary zz" name="submittambahalternatif">Submit</button>
               <button type="button" class="btn btn-danger" id="bataltambahalternatif">Batal</button>
             </form><br><br>
-
-              <?php 
-              if(isset($_POST['submittambahalternatif'])){
-
-                $kodealternatif = $_POST['kodealternatif'];
-                $namaalternatif = $_POST['namaalternatif'];
-                               
-                $query = mysqli_query($koneksi, "INSERT INTO alternatif (kode, nama_alternatif) VALUES ('$kodealternatif', '$namaalternatif')");
-                //echo "<script>alert('Alternatif dengan kode [ ".$kodealternatif." ] Berhasil ditambahkan');</script>";
-                mysqli_close($koneksi);
-                header("location: index.php");               
-                }
-               ?> 
-</div>
+        </div>
         <table class="table table-striped">
             <thead>
               <tr>
@@ -219,14 +263,39 @@ $(document).ready(function(){
                 <th scope="row"><?= $i ;?></th>
                 <td><?= $alternatif['kode'] ;?></td>
                 <td><?= $alternatif['nama_alternatif'] ;?></td>
-                <td>Aksi</td>
+                <td>
+                    <a href="index.php?id_alternatif=<?php echo $alternatif['id_alternatif'] ?>&posisi=2"><button title="edit" type="button" class="btn btn-danger" id="editalternatif"><span class="glyphicon glyphicon-edit"></span></button></a> -
+                    <a href="delete.php?id_alternatif=<?php echo $alternatif['id_alternatif'] ?>"><button title="hapus" type="button" class="btn btn-danger" id="hapusalternatif"><span class="glyphicon glyphicon-trash"></span></button></a>
+                </td>
               </tr>
               <?php 
               $i++;
-            }
+              }
+              if (isset($_GET['id_alternatif'])) {
+              $id_alternatif = $_GET['id_alternatif'];
+                  $query_alternatif_byId = mysqli_query($koneksi, "SELECT * FROM alternatif WHERE id_alternatif = '$id_alternatif'");
+                  while ($alternatif_byId = mysqli_fetch_array($query_alternatif_byId)) { 
+                  
+              ?>
+                  <form method="post" style="margin-left: 10%; margin-right: 10%;" action="update.php">
+                    <h2><u>Edit alternatif</u></h2><input type="text" name="idalternatif" value="<?= $alternatif_byId['id_alternatif']?>">
+                    <div class="form-group">
+                      <label for="kodekriteria">Kode Alternatif:</label>
+                      <input type="text" class="form-control" id="kodekriteria" name="kodealternatif" required value="<?= $alternatif_byId['kode']?>">
+                    </div>
+                    <div class="form-group">
+                      <label for="namakriteria">Nama / Keterangan:</label>
+                      <input type="text" class="form-control" id="namakriteria" name="namaalternatif" required value="<?= $alternatif_byId['nama_alternatif']?>">
+                    </div>
+                    <button type="submit" class="btn btn-primary zz" name="updatealternatif">Submit</button>
+                    <button type="button" class="btn btn-danger" id="batalupdateternatif">Batal</button>
+                  </form><br><br>
+              <?php 
+              }}
                ?>
             </tbody>
           </table>
+
         </div>
       </div>
     </div>
@@ -238,9 +307,15 @@ $(document).ready(function(){
           <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Step 3 ( Tentukan Nilai Alternatif )</a>
         </h4>
       </div>
-      <div id="collapse3" class="panel-collapse collapse">
+      <div id="collapse3" class="panel-collapse collapse <?php echo $p1; ?>">
         <div class="panel-body">
-
+          <?php 
+            $nila = mysqli_query($koneksi, "SELECT * FROM nilai");
+            $ni = mysqli_num_rows($nila);
+            if($ni != 0){
+           ?>
+          <a href="delete.php?resetnilaialternatif"><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span>Reset Data Nilai Alternatif</button></a>
+        <?php } ?>
           <table class="table table-striped">
             <thead>
               <tr>
@@ -265,6 +340,12 @@ $(document).ready(function(){
                 ?>
               </tr>
             </thead>
+            <?php 
+            $nil = mysqli_query($koneksi, "SELECT * FROM nilai");
+            $n = mysqli_num_rows($nil);
+            if($n === 0){
+
+             ?>
             <tbody style="text-align: center;">
               <form method="post">
               <?php 
@@ -286,23 +367,75 @@ $(document).ready(function(){
                 
             </tbody>
           </table>
-          <?php 
-          $nil = mysqli_query($koneksi, "SELECT * FROM nilai");
-          $n = mysqli_num_rows($nil);
-          if($n === 0){
 
-           ?>
                 <button type="submit" class="btn btn-primary" name="submitnilaialternatif">Insert</button>
-              <?php }else{ ?>
+              
+            </form>
+            <?php }else{ ?>
                 <button type="submit" class="btn btn-primary" name="updatenilaialternatif">Update</button>
               <?php } ?>
-            </form>
-
         </div>
       </div>
     </div>
   </div> 
 </div>
+
+<?php 
+
+
+                $k = mysqli_query($koneksi, "SELECT COUNT(*) FROM kriteria");
+                $a = mysqli_query($koneksi, "SELECT COUNT(*) FROM alternatif");
+
+if (isset($_POST['submitnilaialternatif'])) {
+              $query_alter = mysqli_query($koneksi, "SELECT * FROM alternatif");
+              while ($alter = mysqli_fetch_array($query_alter)) { 
+                $alt=$alter['id_alternatif'];
+                  $query_kr = mysqli_query($koneksi, "SELECT * FROM kriteria");
+                  while ($kr = mysqli_fetch_array($query_kr)) {
+                        echo $nil = $alter['id_alternatif']."-".$kr['id_kriteria'];
+                        echo $nilai = $_POST[$nil];
+                        echo "<br>";
+                         }
+                       } 
+}
+
+ ?>
+
+<!------------------------------------------------------------------------- 
+TAMBAH KRITERIA
+------------------------------------------------------------------------- -->
+
+
+<!------------------------------------------------------------------------- 
+UPDATE KRITERIA
+------------------------------------------------------------------------- -->
+
+
+<!------------------------------------------------------------------------- 
+DELETE KRITERIA
+------------------------------------------------------------------------- -->
+
+
+<!------------------------------------------------------------------------- 
+TAMBAH ALTERNATIF
+------------------------------------------------------------------------- -->
+
+<!------------------------------------------------------------------------- 
+UPDATE ALTERNATIF
+------------------------------------------------------------------------- -->
+
+
+<!------------------------------------------------------------------------- 
+DELETE ALTERNATIF
+------------------------------------------------------------------------- -->
+
+
+<!------------------------------------------------------------------------- 
+INPUT DATA NILAI ALTERNATIF
+------------------------------------------------------------------------- -->
+
+
+
 
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
