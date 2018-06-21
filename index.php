@@ -2,6 +2,13 @@
 $p1 ='';
 $p2 = '';
 $p3= '';
+$P4='';
+$P5='';
+$P6='';
+$P7='';
+$P8='';
+$P9='';
+$P10='';
 if (isset($_GET['posisi'])) {
   $pos = $_GET['posisi'];
   if ($pos == 1) {
@@ -10,6 +17,20 @@ if (isset($_GET['posisi'])) {
     $p2 = 'in';
   }elseif ($pos == 3) {
     $p3 = 'in';
+  }elseif ($pos == 4) {
+    $p4 = 'in';
+  }elseif ($pos == 5) {
+    $p5 = 'in';
+  }elseif ($pos == 6) {
+    $p6 = 'in';
+  }elseif ($pos == 7) {
+    $p7 = 'in';
+  }elseif ($pos == 8) {
+    $p8 = 'in';
+  }elseif ($pos == 9) {
+    $p9 = 'in';
+  }elseif ($pos == 10) {
+    $p10 = 'in';
   }
 }
 ?>
@@ -39,7 +60,6 @@ $(document).ready(function(){
     $("#bataltambahalternatif").click(function(){
         $("#formtambahalternatif").hide();
     });
-    
 });
 </script>
 <body>
@@ -51,6 +71,9 @@ $(document).ready(function(){
     <a href="index.php"><button type="button" class="btn btn-danger" name="deletedata" ><span class="glyphicon glyphicon-refresh"></span>Refresh</button></a>
       <a href="delete.php?deletedata"><button type="button" class="btn btn-danger" name="deletedata" ><span class="glyphicon glyphicon-trash"></span>Reset Semua Dataa</button></a><br>
     </div>
+  <!------------------------------------------------------------------------- 
+STEP 1
+------------------------------------------------------------------------- -->
   <div class="panel-group" id="accordion">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -208,6 +231,9 @@ $(document).ready(function(){
         </div>
       </div>
     </div>
+    <!------------------------------------------------------------------------- 
+STEP 2
+------------------------------------------------------------------------- -->
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">
@@ -300,14 +326,16 @@ $(document).ready(function(){
       </div>
     </div>
 
-
+<!------------------------------------------------------------------------- 
+STEP 3
+------------------------------------------------------------------------- -->
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">
           <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Step 3 ( Tentukan Nilai Alternatif )</a>
         </h4>
       </div>
-      <div id="collapse3" class="panel-collapse collapse <?php echo $p1; ?>">
+      <div id="collapse3" class="panel-collapse collapse <?php echo $p3; ?>">
         <div class="panel-body">
           <?php 
             $nila = mysqli_query($koneksi, "SELECT * FROM nilai");
@@ -347,7 +375,7 @@ $(document).ready(function(){
 
              ?>
             <tbody style="text-align: center;">
-              <form method="post">
+              <form method="post" action="add.php">
               <?php 
               $query_alter = mysqli_query($koneksi, "SELECT * FROM alternatif");
               while ($alter = mysqli_fetch_array($query_alter)) { 
@@ -360,7 +388,7 @@ $(document).ready(function(){
                   while ($kr = mysqli_fetch_array($query_kr)) {
 
                 ?>
-                  <td><input type="number" name="<?= $alter['id_alternatif']; ?>-<?= $kr['id_kriteria']; ?>" min="0" max="5" placeholder="<?= $alter['kode'].'-'.$kr['kode_kriteria']?>"></td>
+                  <td><input type="text" class="inputnilai" name="<?= $alter['id_alternatif']; ?>-<?= $kr['id_kriteria']; ?>" placeholder="<?= $alter['kode'].'-'.$kr['kode_kriteria']?>" required></td>
                 <?php } ?>
               </tr>
               <?php } ?>
@@ -372,48 +400,116 @@ $(document).ready(function(){
               
             </form>
             <?php }else{ ?>
-                <button type="submit" class="btn btn-primary" name="updatenilaialternatif">Update</button>
+                <tbody style="text-align: center;">
+              <form method="post" action="add.php">
+              <?php 
+              $query_alter = mysqli_query($koneksi, "SELECT * FROM alternatif");
+              while ($alter = mysqli_fetch_array($query_alter)) { 
+                $alt=$alter['id_alternatif'];
+              ?>
+              <tr>
+                <th scope="col"><p title="<?= $alter['nama_alternatif']; ?>"><?= $alter['kode']; ?><br>[ <?= $alter['nama_alternatif']; ?> ]</p></th>
+                <?php //for ($i=0; $i < 3; $i++) { 
+                  $query_kr = mysqli_query($koneksi, "SELECT * FROM kriteria");
+                  while ($kr = mysqli_fetch_array($query_kr)) {
+                    $id_kri = $kr['id_kriteria'];
+                    $id1 = $alter['id_alternatif'];
+                    $id2 = $kr['id_kriteria'];
+                    $q_nilai = mysqli_query($koneksi, "SELECT * FROM nilai WHERE id_aternatif = '$id1' AND id_kriteria = '$id2'");
+                    $nilai = mysqli_fetch_array($q_nilai);
+                    
+                ?>
+                  <td><input type="text" name="idnilai" value="<?= $nilai['id_nilai']; ?>" hidden>
+                    <input type="text" class="inputnilai" name="<?= $alter['id_alternatif']; ?>-<?= $kr['id_kriteria']; ?>"  value="<?= $nilai['nilai']; ?>" required></td>
+                <?php
+                    } ?>
+              </tr>
               <?php } ?>
+                
+            </tbody>
+            </table>
+                <button type="submit" class="btn btn-primary" name="updatenilaialternatif">Update</button>
+              </form>
+              <?php } ?>
+        </div>
+      </div>
+    </div>
+<!------------------------------------------------------------------------- 
+STEP 4
+------------------------------------------------------------------------- -->
+  <div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">Step 4</a>
+        </h4>
+      </div>
+      <div id="collapse4" class="panel-collapse collapse <?php echo $p4; ?>">
+        <div class="panel-body">
+          444444
+
+        </div>
+      </div>
+    </div>
+
+<!------------------------------------------------------------------------- 
+STEP 5
+------------------------------------------------------------------------- -->
+  <div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse5">Step 5</a>
+        </h4>
+      </div>
+      <div id="collapse5" class="panel-collapse collapse <?php echo $p5; ?>">
+        <div class="panel-body">
+          555555
+
+        </div>
+      </div>
+    </div>
+
+<!------------------------------------------------------------------------- 
+STEP 6
+------------------------------------------------------------------------- -->
+  <div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse6">Step 6</a>
+        </h4>
+      </div>
+      <div id="collapse6" class="panel-collapse collapse <?php echo $p6; ?>">
+        <div class="panel-body">
+          444444
+
+        </div>
+      </div>
+    </div>
+
+<!------------------------------------------------------------------------- 
+STEP 5
+------------------------------------------------------------------------- -->
+  <div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse7">Step 7</a>
+        </h4>
+      </div>
+      <div id="collapse7" class="panel-collapse collapse <?php echo $p7; ?>">
+        <div class="panel-body">
+          555555
+
         </div>
       </div>
     </div>
   </div> 
 </div>
 
-<?php 
 
 
-                $k = mysqli_query($koneksi, "SELECT COUNT(*) FROM kriteria");
-                $a = mysqli_query($koneksi, "SELECT COUNT(*) FROM alternatif");
-
-if (isset($_POST['submitnilaialternatif'])) {
-              $query_alter = mysqli_query($koneksi, "SELECT * FROM alternatif");
-              while ($alter = mysqli_fetch_array($query_alter)) { 
-                $alt=$alter['id_alternatif'];
-                  $query_kr = mysqli_query($koneksi, "SELECT * FROM kriteria");
-                  while ($kr = mysqli_fetch_array($query_kr)) {
-                        echo $nil = $alter['id_alternatif']."-".$kr['id_kriteria'];
-                        echo $nilai = $_POST[$nil];
-                        echo "<br>";
-                         }
-                       } 
-}
-
- ?>
-
-<!------------------------------------------------------------------------- 
-TAMBAH KRITERIA
-------------------------------------------------------------------------- -->
-
-
-<!------------------------------------------------------------------------- 
-UPDATE KRITERIA
-------------------------------------------------------------------------- -->
-
-
-<!------------------------------------------------------------------------- 
-DELETE KRITERIA
-------------------------------------------------------------------------- -->
 
 
 <!------------------------------------------------------------------------- 

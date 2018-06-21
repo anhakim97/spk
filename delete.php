@@ -1,5 +1,6 @@
 <?php 
 include ('koneksi.php');
+
 if (isset($_GET['id_kriteria'])) {
               $id = $_GET['id_kriteria'];
               if(mysqli_query($koneksi, "DELETE FROM kriteria WHERE id_kriteria = $id ")){
@@ -9,7 +10,7 @@ if (isset($_GET['id_kriteria'])) {
           		echo "Gagal";
           	}
           }
-
+//delete semua data
 if(isset($_GET['deletedata'])){
                 echo "<script>alert('Semua Data berhasil dihapus');</script>";
                 mysqli_query($koneksi, "DELETE FROM nilai");
@@ -19,7 +20,7 @@ if(isset($_GET['deletedata'])){
                 mysqli_query($koneksi, "ALTER TABLE alternatif AUTO_INCREMENT = 0"); 
                 mysqli_query($koneksi, "ALTER TABLE kriteria AUTO_INCREMENT = 0"); 
                 
-                header("location: index.php?posisi=1");   
+                header("location: index.php");   
 }
 if(isset($_GET['resetnilaialternatif'])){
                 echo "<script>alert('Nilai alternafir berhasil direset');</script>";
@@ -36,6 +37,11 @@ if (isset($_GET['id_alternatif'])) {
             }else{
               echo "Gagal";
             }
+}
+if (isset($_GET['deletenilai'])) {
+                mysqli_query($koneksi, "DELETE FROM nilai");
+                mysqli_query($koneksi, "ALTER TABLE nilai AUTO_INCREMENT = 0"); 
+                header("location: index.php"); 
 }
 
  ?>
