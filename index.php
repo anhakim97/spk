@@ -437,16 +437,125 @@ STEP 3
 <!------------------------------------------------------------------------- 
 STEP 4
 ------------------------------------------------------------------------- -->
+<!------------------------------------------------------------------------- 
+array
+------------------------------------------------------------------------- -->
+<?php 
+$jumlah_alternatif = mysqli_num_rows($query_alter); 
+$jumlah_kriteria = mysqli_num_rows($query_kr);
+$id11 =0 ;
+$id22 = 0 ; 
+$query_alter = mysqli_query($koneksi, "SELECT * FROM alternatif");
+while ($alter = mysqli_fetch_array($query_alter)) { 
+  $alt=$alter['id_alternatif'];
+  $query_kr = mysqli_query($koneksi, "SELECT * FROM kriteria");
+  while ($kr = mysqli_fetch_array($query_kr)) {
+      $id_kri = $kr['id_kriteria'];
+      $id1 = $alter['id_alternatif'];
+      $id2 = $kr['id_kriteria'];
+      $q_nilai = mysqli_query($koneksi, "SELECT * FROM nilai WHERE id_aternatif = '$id1' AND id_kriteria = '$id2'");
+      $nilai = mysqli_fetch_array($q_nilai);
+      $nilainya[$id11][$id22] = $nilai['nilai'];
+      //echo $id11." -- ".$id22 ."<br>";
+      $id22++;
+      if ($id22 == $jumlah_kriteria) {
+        $id22 =0;
+      }
+  }
+  $id11++;
+}
+
+for ($kr=0; $kr < $jumlah_kriteria; $kr++) { 
+  $xy[$kr] = 0;  
+  for ($al=0; $al < $jumlah_alternatif; $al++) { 
+    $qq = $nilainya[$al][$kr];
+    $ww = $xy[$kr];
+    $xy[$kr] = $ww + ($qq*$qq);
+  }
+}
+
+ ?>
   <div class="panel-group" id="accordion">
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">Step 4</a>
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">Step 4 ( Hasil normalisasi terhadap matrix X )</a>
         </h4>
       </div>
       <div id="collapse4" class="panel-collapse collapse <?php echo $p4; ?>">
         <div class="panel-body">
-          444444
+          <h1>Matrix R</h1>
+          
+
+ <?php 
+            $nila = mysqli_query($koneksi, "SELECT * FROM nilai");
+            $ni = mysqli_num_rows($nila);
+            if($ni != 0){
+           ?>
+        <?php } ?>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Alternatif</th>
+                <?php 
+                $k = mysqli_query($koneksi, "SELECT COUNT(*) FROM kriteria");
+                $a = mysqli_query($koneksi, "SELECT COUNT(*) FROM alternatif");
+                
+                 $query_kriteria = mysqli_query($koneksi, "SELECT * FROM kriteria");
+                 while ($kriteria = mysqli_fetch_array($query_kriteria)) { 
+
+                  ?>
+                <th scope="col" style="text-align: center;" class=".table-responsive">
+                  <p title="<?= $kriteria['nama_kriteria']?>"><?= $kriteria['kode_kriteria']?><br>
+                  [<?= $kriteria['sifat']?>]<br>
+                  [bobot : <?= $kriteria['bobot']?>]<br></p>
+                    
+                  </th>
+
+                <?php 
+                }
+                ?>
+              </tr>
+            </thead>
+            <?php 
+            $nil = mysqli_query($koneksi, "SELECT * FROM nilai");
+            $n = mysqli_num_rows($nil); ?>
+                <tbody style="text-align: center;">
+              <?php 
+              $query_alter = mysqli_query($koneksi, "SELECT * FROM alternatif");
+              $cc=0;
+              while ($alter = mysqli_fetch_array($query_alter)) { 
+                $alt=$alter['id_alternatif'];
+              ?>
+              <tr>
+                <th scope="col"><p title="<?= $alter['nama_alternatif']; ?>"><?= $alter['kode']; ?><br>[ <?= $alter['nama_alternatif']; ?> ]</p></th>
+                <?php //for ($i=0; $i < 3; $i++) { 
+                  $query_kr = mysqli_query($koneksi, "SELECT * FROM kriteria");
+                  while ($kr = mysqli_fetch_array($query_kr)) {
+                    $id_kri = $kr['id_kriteria'];
+                    $id1 = $alter['id_alternatif'];
+                    $id2 = $kr['id_kriteria'];
+                    $q_nilai = mysqli_query($koneksi, "SELECT * FROM nilai WHERE id_aternatif = '$id1' AND id_kriteria = '$id2'");
+                    $nilai = mysqli_fetch_array($q_nilai);
+                    $x = $nilai['nilai'];
+                    
+                ?>
+                  <td><?= $hasil = $x/sqrt($xy[$cc]); ?></td>
+                <?php 
+                $cc++;
+                if ($cc==$jumlah_kriteria) {
+                  $cc=0;
+                }
+                } 
+                
+                ?>
+              </tr>
+              <?php 
+               } ?>
+                
+            </tbody>
+            </table>
+
 
         </div>
       </div>
@@ -459,20 +568,106 @@ STEP 5
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse5">Step 5</a>
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse5">Step 5 ( Hasil Perkalian Matrix R dengan bobotnya )</a>
         </h4>
       </div>
       <div id="collapse5" class="panel-collapse collapse <?php echo $p5; ?>">
         <div class="panel-body">
-          555555
+          <h1>Matrix Y</h1>
+ <?php 
+            $nila = mysqli_query($koneksi, "SELECT * FROM nilai");
+            $ni = mysqli_num_rows($nila);
+            if($ni != 0){
+           ?>
+        <?php } ?>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Alternatif</th>
+                <?php 
+                $k = mysqli_query($koneksi, "SELECT COUNT(*) FROM kriteria");
+                $a = mysqli_query($koneksi, "SELECT COUNT(*) FROM alternatif");
+                
+                 $query_kriteria = mysqli_query($koneksi, "SELECT * FROM kriteria");
+                 while ($kriteria = mysqli_fetch_array($query_kriteria)) { 
+
+                  ?>
+                <th scope="col" style="text-align: center;" class=".table-responsive">
+                  <p title="<?= $kriteria['nama_kriteria']?>"><?= $kriteria['kode_kriteria']?><br>
+                  [<?= $kriteria['sifat']?>]<br>
+                  [bobot : <?= $kriteria['bobot']?>]<br></p>
+                    
+                  </th>
+
+                <?php 
+                }
+                ?>
+              </tr>
+            </thead>
+            <?php 
+            $nil = mysqli_query($koneksi, "SELECT * FROM nilai");
+
+            $n = mysqli_num_rows($nil); ?>
+                <tbody style="text-align: center;">
+              <?php 
+              $query_alter = mysqli_query($koneksi, "SELECT * FROM alternatif");
+              $cc=0;
+              $x = 0;
+              $y = 0;
+              while ($alter = mysqli_fetch_array($query_alter)) { 
+                $alt=$alter['id_alternatif'];
+              ?>
+              <tr>
+                <th scope="col"><p title="<?= $alter['nama_alternatif']; ?>"><?= $alter['kode']; ?><br>[ <?= $alter['nama_alternatif']; ?> ]</p></th>
+                <?php //for ($i=0; $i < 3; $i++) { 
+                  $query_kr = mysqli_query($koneksi, "SELECT * FROM kriteria");
+                  while ($kr = mysqli_fetch_array($query_kr)) {
+                    $id_kri = $kr['id_kriteria'];
+                    $id1 = $alter['id_alternatif'];
+                    $id2 = $kr['id_kriteria'];
+                    $q_nilai = mysqli_query($koneksi, "SELECT * FROM nilai WHERE id_aternatif = '$id1' AND id_kriteria = '$id2'");
+                    $nilai = mysqli_fetch_array($q_nilai);
+                    $xx = $nilai['nilai'];
+                    $bobot = $kr['bobot'];
+                    $hasil = $xx/sqrt($xy[$cc]);
+                    $sifat[$cc] = $kr['sifat'];
+                ?>
+                  <td><?= $matrixY[$x][$cc] = $hasil*$bobot; ?> <br> <?php echo "X = ".$x." - Y = ". $cc; ?></td>
+                <?php 
+
+                $cc++;
+                $y++;
+                if ($cc==$jumlah_kriteria) {
+                  $cc=0;
+                }
+
+                } 
+                
+                ?>
+              </tr>
+              <?php 
+               $x++; } ?>
+                  
+            </tbody>
+            </table>
 
         </div>
+
       </div>
     </div>
 
 <!------------------------------------------------------------------------- 
 STEP 6
 ------------------------------------------------------------------------- -->
+<?php 
+// for ($i=0; $i < $jumlah_kriteria; $i++) { //5
+//   for ($j=0; $j < $jumlah_alternatif; $j++) { //3
+//     echo $j . " - " . $i . "<br>";
+//   }
+//   echo "======<br>";
+// }
+ ?>
+
   <div class="panel-group" id="accordion">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -482,14 +677,61 @@ STEP 6
       </div>
       <div id="collapse6" class="panel-collapse collapse <?php echo $p6; ?>">
         <div class="panel-body">
-          444444
+          
+          <div class="col-md-6"><h2>Solusi Ideal Positif</h2>
+            <table class="table table-striped" >
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Kode</th>
+                  <th scope="col">Nilai</th>
+                </tr>
+              </thead>
+              <tbody>
+               <?php 
+               for ($i=0; $i < $jumlah_kriteria; $i++) { 
+                 for ($ii=0; $ii < $jumlah_alternatif; $ii++) { 
+                  echo $matrixY[$ii][$i]; 
+                 }
+
+                ?>
+                <tr>
+                  <th scope="row"><?= $i+1; ?></th>
+                  <td>A<?= $i+1; ?>+</td>
+                  <td><?php echo max(12); ?><br><?php echo $sifat[$i]; ?></td> 
+                </tr>
+              <?php } ?>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="col-md-6">
+          <h2>Solusi Ideal Negatif</h2>
+            <table class="table table-striped" >
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Kode</th>
+                  <th scope="col">Nilai</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>Mark</td>
+                  <td>Otto</td> 
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
 
         </div>
       </div>
     </div>
 
 <!------------------------------------------------------------------------- 
-STEP 5
+STEP 7
 ------------------------------------------------------------------------- -->
   <div class="panel-group" id="accordion">
     <div class="panel panel-default">
@@ -501,6 +743,63 @@ STEP 5
       <div id="collapse7" class="panel-collapse collapse <?php echo $p7; ?>">
         <div class="panel-body">
           555555
+
+        </div>
+      </div>
+    </div>
+  </div> 
+</div>
+<!------------------------------------------------------------------------- 
+STEP 8
+------------------------------------------------------------------------- -->
+  <div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse8">Step 8</a>
+        </h4>
+      </div>
+      <div id="collapse8" class="panel-collapse collapse <?php echo $p8; ?>">
+        <div class="panel-body">
+          555555
+
+        </div>
+      </div>
+    </div>
+  </div> 
+</div>
+<!------------------------------------------------------------------------- 
+STEP 9
+------------------------------------------------------------------------- -->
+  <div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse9">Step 9</a>
+        </h4>
+      </div>
+      <div id="collapse9" class="panel-collapse collapse <?php echo $p9; ?>">
+        <div class="panel-body">
+          555555
+
+        </div>
+      </div>
+    </div>
+  </div> 
+</div>
+<!------------------------------------------------------------------------- 
+STEP 10
+------------------------------------------------------------------------- -->
+  <div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse10">Step 10</a>
+        </h4>
+      </div>
+      <div id="collapse10" class="panel-collapse collapse <?php echo $p10; ?>">
+        <div class="panel-body">
+          10
 
         </div>
       </div>
