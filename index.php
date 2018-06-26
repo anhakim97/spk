@@ -437,6 +437,8 @@ STEP 3
 <!------------------------------------------------------------------------- 
 STEP 4
 ------------------------------------------------------------------------- -->
+<?php if($n != 0){
+ ?>
 <!------------------------------------------------------------------------- 
 array
 ------------------------------------------------------------------------- -->
@@ -672,7 +674,7 @@ STEP 6
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse6">Step 6</a>
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse6">Step 6 ( Hasil Solusi Ideal Positif dan Solusi ideal Negatif )</a>
         </h4>
       </div>
       <div id="collapse6" class="panel-collapse collapse <?php echo $p6; ?>">
@@ -772,7 +774,7 @@ STEP 7
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse7">Step 7</a>
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse7">Step 7 ( Hasil Jarak Alternatif Solusi Ideal Positif dan Solusi Ideal Negatif) )</a>
         </h4>
       </div>
       <div id="collapse7" class="panel-collapse collapse <?php echo $p7; ?>">
@@ -855,7 +857,7 @@ STEP 8
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse8">Step 8</a>
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse8">Step 8 ( Nilai Preferensi Setiap Alternatif )</a>
         </h4>
       </div>
       <div id="collapse8" class="panel-collapse collapse <?php echo $p8; ?>">
@@ -892,13 +894,13 @@ STEP 8
   </div> 
 </div>
 <!------------------------------------------------------------------------- 
-STEP 9
+kesimpulan
 ------------------------------------------------------------------------- -->
   <div class="panel-group" id="accordion">
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse9">Step 9</a>
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse9">Kesimpulan</a>
         </h4>
       </div>
       <div id="collapse9" class="panel-collapse collapse <?php echo $p9; ?>">
@@ -910,26 +912,10 @@ STEP 9
     </div>
   </div> 
 </div>
-<!------------------------------------------------------------------------- 
-STEP 10
-------------------------------------------------------------------------- -->
-  <div class="panel-group" id="accordion">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse10">Step 10</a>
-        </h4>
-      </div>
-      <div id="collapse10" class="panel-collapse collapse <?php echo $p10; ?>">
-        <div class="panel-body">
-          10
 
-        </div>
-      </div>
-    </div>
-  </div> 
-</div>
-
+<?php 
+}
+ ?>
 
 
 
