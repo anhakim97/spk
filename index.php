@@ -689,16 +689,30 @@ STEP 6
               </thead>
               <tbody>
                <?php 
-               for ($i=0; $i < $jumlah_kriteria; $i++) { 
+               
+               for ($i=0; $i < $jumlah_kriteria; $i++) {
+               $hasilideal=0; 
                  for ($ii=0; $ii < $jumlah_alternatif; $ii++) { 
-                  echo $matrixY[$ii][$i]; 
+                  if ($hasilideal == 0) {
+                    $hasilideal = $matrixY[$ii][$i];
+                  }
+                              if ($sifat[$i]=="cost") {
+                                if ($hasilideal >= $matrixY[$ii][$i] ){
+                                  $hasilideal = $matrixY[$ii][$i];
+                                 }
+                              }else if($sifat[$i]=="benefit"){
+                                 if ($hasilideal <= $matrixY[$ii][$i]){
+                                 $hasilideal = $matrixY[$ii][$i];
+                                 }
+                              }
                  }
+                 $idealpositif[$i] = $hasilideal;
 
                 ?>
                 <tr>
                   <th scope="row"><?= $i+1; ?></th>
                   <td>A<?= $i+1; ?>+</td>
-                  <td><?php echo max(12); ?><br><?php echo $sifat[$i]; ?></td> 
+                  <td> <?php echo $idealpositif[$i]; ?></td> 
                 </tr>
               <?php } ?>
               </tbody>
@@ -716,11 +730,32 @@ STEP 6
                 </tr>
               </thead>
               <tbody>
+               <?php 
+               
+               for ($i=0; $i < $jumlah_kriteria; $i++) { 
+                $hasilideall= 0;
+                 for ($ii=0; $ii < $jumlah_alternatif; $ii++) { 
+                  if ($hasilideall == 0) {
+                    $hasilideall = $matrixY[$ii][$i];
+                  }
+                              if ($sifat[$i]=="cost") {
+                                if ($hasilideall <= $matrixY[$ii][$i]){
+                                    $hasilideall = $matrixY[$ii][$i];
+                                 }
+                              }else if($sifat[$i]=="benefit"){
+                                if ($hasilideall >= $matrixY[$ii][$i] ){
+                                    $hasilideall = $matrixY[$ii][$i];
+                                 }
+                              }
+                 }
+                 $idealnegatif[$i] = $hasilideall;
+                ?>
                 <tr>
-                  <th scope="row">1</th>
-                  <td>Mark</td>
-                  <td>Otto</td> 
+                  <th scope="row"><?= $i+1; ?></th>
+                  <td>A<?= $i+1; ?>+</td>
+                  <td> <?php echo $idealnegatif[$i]; ?></td> 
                 </tr>
+              <?php } ?>
               </tbody>
             </table>
           </div>
@@ -742,7 +777,61 @@ STEP 7
       </div>
       <div id="collapse7" class="panel-collapse collapse <?php echo $p7; ?>">
         <div class="panel-body">
-          555555
+          
+
+          <div class="col-md-6">
+            <h2>Jarak Alternatif terhadap <br>Solusi ideal Positif</h2>
+            <table class="table table-striped" >
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Kode</th>
+                  <th scope="col">Nilai</th>
+                </tr>
+              </thead>
+              <tbody>
+               <?php 
+               
+               for ($i=0; $i < $jumlah_alternatif; $i++) { 
+                 for ($ii=0; $ii < $jumlah_kriteria; $ii++) { 
+                 }
+                ?>
+                <tr>
+                  <th scope="row"><?= $i+1; ?></th>
+                  <td>D<?= $i+1; ?>+</td>
+                  <td> ></td> 
+                </tr>
+              <?php } ?>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="col-md-6">
+          <h2>Jarak Alternatif terhadap <br>Solusi ideal Negatif</h2>
+            <table class="table table-striped" >
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Kode</th>
+                  <th scope="col">Nilai</th>
+                </tr>
+              </thead>
+              <tbody>
+               <?php 
+               
+               for ($i=0; $i < $jumlah_alternatif; $i++) { 
+                 for ($ii=0; $ii < $jumlah_kriteria; $ii++) { 
+                 }
+                ?>
+                <tr>
+                  <th scope="row"><?= $i+1; ?></th>
+                  <td>D<?= $i+1; ?>-</td>
+                  <td> ></td> 
+                </tr>
+              <?php } ?>
+              </tbody>
+            </table>
+          </div>
 
         </div>
       </div>
