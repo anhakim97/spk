@@ -793,13 +793,18 @@ STEP 7
                <?php 
                
                for ($i=0; $i < $jumlah_alternatif; $i++) { 
+                $perhitungan = 0;
                  for ($ii=0; $ii < $jumlah_kriteria; $ii++) { 
+                  $sq = $idealpositif[$ii] - $matrixY[$i][$ii];                  
+                    $perhitungan = $perhitungan + ($sq * $sq);
                  }
+                 $hasildplus = sqrt($perhitungan);
+                 $dpositif[$i] = $hasildplus;
                 ?>
                 <tr>
                   <th scope="row"><?= $i+1; ?></th>
                   <td>D<?= $i+1; ?>+</td>
-                  <td> ></td> 
+                  <td> <?php echo $hasildplus; ?></td> 
                 </tr>
               <?php } ?>
               </tbody>
@@ -819,14 +824,19 @@ STEP 7
               <tbody>
                <?php 
                
-               for ($i=0; $i < $jumlah_alternatif; $i++) { 
+            for ($i=0; $i < $jumlah_alternatif; $i++) { 
+                $perhitungan = 0;
                  for ($ii=0; $ii < $jumlah_kriteria; $ii++) { 
+                  $sq = $matrixY[$i][$ii] - $idealnegatif[$ii];                  
+                    $perhitungan = $perhitungan + ($sq * $sq);
                  }
+                  $hasildnegatif = sqrt($perhitungan);
+                  $dnegatif[$i] = $hasildnegatif;
                 ?>
                 <tr>
                   <th scope="row"><?= $i+1; ?></th>
                   <td>D<?= $i+1; ?>-</td>
-                  <td> ></td> 
+                  <td> <?php echo $hasildnegatif; ?></td> 
                 </tr>
               <?php } ?>
               </tbody>
@@ -850,7 +860,31 @@ STEP 8
       </div>
       <div id="collapse8" class="panel-collapse collapse <?php echo $p8; ?>">
         <div class="panel-body">
-          555555
+
+           <table class="table table-striped" >
+              <thead>
+                <tr>
+                  <th scope="col">Kode</th>
+                  <th scope="col">Nilai</th>
+                  <th scope="col">Rangking</th>
+                </tr>
+              </thead>
+              <tbody>
+               <?php 
+               for ($x=0; $x < $jumlah_alternatif; $x++) { 
+                 $v = $dnegatif[$x]/($dnegatif[$x]+$dpositif[$x]);
+                 $nilaiv[$x] = $v;
+               }
+            for ($i=0; $i < $jumlah_alternatif; $i++) { 
+                ?>
+                <tr>
+                  <th scope="row">V<?= $i+1; ?> </th>
+                  <td> <?php echo $nilaiv[$i]; ?></td>
+                  <td> </td> 
+                </tr>
+              <?php } ?>
+              </tbody>
+            </table>
 
         </div>
       </div>
