@@ -38,6 +38,7 @@ if (isset($_GET['posisi'])) {
 <!DOCTYPE html>
 <html>
 <head>
+  <title>SPK - TOPSIS</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -65,8 +66,9 @@ $(document).ready(function(){
 <body>
 
 <div class="container">
-  <h2>Selamat Datang di Aplikasi SPK</h2>
-  <p><strong></strong> Metode TOPSIS</p>
+  <h2>Technique for Order Preference by Similarity to Ideal Solution (TOPSIS)</h2>
+  <p><strong>Metode TOPSIS</strong> didasarkan pada konsep dimana alternatif terpilih yang terbaik tidak hanya memiliki jarak terpendek dari solusi ideal positif, namun juga memiliki jarak terpanjang dari solusi ideal negatif. <br>
+    <b>15523173 - 15523164 - 15523130</b></p>
   <div style="width: 100%; margin-left: 0px; text-align: right;">
     <a href="index.php"><button type="button" class="btn btn-danger" name="deletedata" ><span class="glyphicon glyphicon-refresh"></span>Refresh</button></a>
       <a href="delete.php?deletedata"><button type="button" class="btn btn-danger" name="deletedata" ><span class="glyphicon glyphicon-trash"></span>Reset Semua Dataa</button></a><br>
@@ -84,7 +86,7 @@ STEP 1
       <div id="collapse1" class="panel-collapse collapse <?php echo $p1; ?>">
         <div class="panel-body">
           <button id="tambahkriteria" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Tambah</button>  
-          <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span>Reset Data</button>
+          <a href="delete.php?resetkriteria"><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span>Reset Data</button></a>
           <br>
           <div id="formtambahkriteria" >
             <br>
@@ -96,6 +98,7 @@ STEP 1
                 width: 50%;
               }
             </style>
+            <!-- form untuk input kriteria baru -->
             <form method="post" style="margin-left: 10%; margin-right: 10%; " action="add.php">
               <h2><u>Tambah Kriteria</u></h2>
               <div class="form-group">
@@ -123,8 +126,10 @@ STEP 1
               <button type="submit" class="btn btn-primary zz" name="submittambahkriteria">Submit</button>
               <button type="button" class="btn btn-danger" id="bataltambahkriteria">Batal</button>
             </form><br><br>
+            <!--penutup  form untuk input kriteria baru -->
           </div>
 
+          <!-- menampilkan data kriteria yang sudah diinput -->
           <table class="table table-striped">
             <thead>
               <tr>
@@ -157,6 +162,7 @@ STEP 1
                  <?php $i++;
                  
                  }
+                 // method get untuk edit kriteria berdasarkan id
                  if (isset($_GET['id_kriteria'])) {
                   $id_kriteria = $_GET['id_kriteria'];
                   $query_kriteria_byId = mysqli_query($koneksi, "SELECT * FROM kriteria WHERE id_kriteria = '$id_kriteria'");
@@ -176,7 +182,7 @@ STEP 1
                           <h2><u>edit Kriteria</u></h2>
                           <div class="form-group">
                             
-                            <label for="kodekriteria">Kode Kriteria:</label><input type="text" name="idkriteria" value="<?= $kriteria_byId['kode_kriteria']; ?>" readonly>
+                            <label for="kodekriteria">Kode Kriteria:</label><input type="text" name="idkriteria" value="<?= $kriteria_byId['id_kriteria']; ?>" readonly>
                             <input type="text" class="form-control" id="kodekriteria" name="kodekriteria" required value="<?= $kriteria_byId['kode_kriteria'] ?>">
                           </div>
                           <div class="form-group">
@@ -216,15 +222,16 @@ STEP 1
                           <button type="submit" class="btn btn-primary zz" name="updatekriteria">Update Kriteria</button>
                           <button type="button" class="btn btn-danger" id="batalupdatekriteria">Batal</button>
                         </form><br><br>
+
                       </div>
                   <?php
-                  }
+                  }//penutup  method get untuk edit kriteria berdasarkan id
                 }
                   ?>
 
             </tbody>
           </table>
-          
+          <!-- penutup menampilkan data kriteria yang sudah diinput -->
 
 
 
@@ -243,7 +250,7 @@ STEP 2
       <div id="collapse2" class="panel-collapse collapse <?php echo $p2; ?>">
         <div class="panel-body">
           <button type="button" class="btn btn-primary" id="tambahalternatif"><span class="glyphicon glyphicon-plus"></span>Tambah</button>  
-          <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span>Reset Data</button>
+          <a href="delete.php?resetalternatif"><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span>Reset Data</button></a>
           <br>
           <div id="formtambahalternatif" >
             <br>
@@ -304,7 +311,7 @@ STEP 2
                   
               ?>
                   <form method="post" style="margin-left: 10%; margin-right: 10%;" action="update.php">
-                    <h2><u>Edit alternatif</u></h2><input type="text" name="idalternatif" value="<?= $alternatif_byId['id_alternatif']?>">
+                    <h2><u>Edit alternatif</u></h2><input type="text" name="idalternatif" value="<?= $alternatif_byId['id_alternatif']?>" hidden>
                     <div class="form-group">
                       <label for="kodekriteria">Kode Alternatif:</label>
                       <input type="text" class="form-control" id="kodekriteria" name="kodealternatif" required value="<?= $alternatif_byId['kode']?>">
@@ -337,11 +344,15 @@ STEP 3
       </div>
       <div id="collapse3" class="panel-collapse collapse <?php echo $p3; ?>">
         <div class="panel-body">
+          Berikan Nilai alternatif pada setiap kriteria (matrix X), <br>
+          Silahkan isi dengan Angka, jika nilai berupa angka desimal tulis koma menggunakan titik (.) <br>
           <?php 
             $nila = mysqli_query($koneksi, "SELECT * FROM nilai");
             $ni = mysqli_num_rows($nila);
             if($ni != 0){
            ?>
+           <br>
+           jika sebelumnya anda menginputkan data yang salah (berupa huruf) atau tidak sesuai dengan ketentuan. bisa klik tombol reset dibawah ini atau isikan data yang benar dan klik update <br>
           <a href="delete.php?resetnilaialternatif"><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span>Reset Data Nilai Alternatif</button></a>
         <?php } ?>
           <table class="table table-striped">
@@ -388,7 +399,7 @@ STEP 3
                   while ($kr = mysqli_fetch_array($query_kr)) {
 
                 ?>
-                  <td><input type="text" class="inputnilai" name="<?= $alter['id_alternatif']; ?>-<?= $kr['id_kriteria']; ?>" placeholder="<?= $alter['kode'].'-'.$kr['kode_kriteria']?>" required></td>
+                  <td><input type="text" class="inputnilai form-control" name="<?= $alter['id_alternatif']; ?>-<?= $kr['id_kriteria']; ?>" placeholder="<?= $alter['kode'].'-'.$kr['kode_kriteria']?>" required style="width: 100%; text-align: center;"></td>
                 <?php } ?>
               </tr>
               <?php } ?>
@@ -401,7 +412,7 @@ STEP 3
             </form>
             <?php }else{ ?>
                 <tbody style="text-align: center;">
-              <form method="post" action="add.php">
+              <form method="post" action="add.php" align="center">
               <?php 
               $query_alter = mysqli_query($koneksi, "SELECT * FROM alternatif");
               while ($alter = mysqli_fetch_array($query_alter)) { 
@@ -419,8 +430,8 @@ STEP 3
                     $nilai = mysqli_fetch_array($q_nilai);
                     
                 ?>
-                  <td><input type="text" name="idnilai" value="<?= $nilai['id_nilai']; ?>" hidden>
-                    <input type="text" class="inputnilai" name="<?= $alter['id_alternatif']; ?>-<?= $kr['id_kriteria']; ?>"  value="<?= $nilai['nilai']; ?>" required></td>
+                  <td title="<?php echo $id1." - ".$id2; ?>"><input type="text" name="idnilai" value="<?= $nilai['id_nilai']; ?>" hidden>
+                    <input type="text" class="inputnilai form-control" name="<?= $alter['id_alternatif']; ?>-<?= $kr['id_kriteria']; ?>"  value="<?= $nilai['nilai']; ?>" required style="width: 100%; text-align: center;"></td>
                 <?php
                     } ?>
               </tr>
@@ -437,7 +448,8 @@ STEP 3
 <!------------------------------------------------------------------------- 
 STEP 4
 ------------------------------------------------------------------------- -->
-<?php if($n != 0){
+
+<?php if($n != 0){//$n adalah jumlah row tabel nilai
  ?>
 <!------------------------------------------------------------------------- 
 array
@@ -471,8 +483,8 @@ for ($kr=0; $kr < $jumlah_kriteria; $kr++) {
   $xy[$kr] = 0;  
   for ($al=0; $al < $jumlah_alternatif; $al++) { 
     $qq = $nilainya[$al][$kr];
-    $ww = $xy[$kr];
-    $xy[$kr] = $ww + ($qq*$qq);
+    $ww = $xy[$kr];//mengambil nilai bobot
+    $xy[$kr] = $ww + ($qq*$qq); // perkalian nilai denagn bobot 
   }
 }
 
@@ -484,7 +496,7 @@ for ($kr=0; $kr < $jumlah_kriteria; $kr++) {
           <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">Step 4 ( Hasil normalisasi terhadap matrix X )</a>
         </h4>
       </div>
-      <div id="collapse4" class="panel-collapse collapse <?php echo $p4; ?>">
+      <div id="collapse4" class="panel-collapse collapse <?php //echo $p4; ?>">
         <div class="panel-body">
           <h1>Matrix R</h1>
           
@@ -542,7 +554,7 @@ for ($kr=0; $kr < $jumlah_kriteria; $kr++) {
                     $x = $nilai['nilai'];
                     
                 ?>
-                  <td><?= $hasil = $x/sqrt($xy[$cc]); ?></td>
+                  <td title="<?php echo $id1." - ".$id2; ?>"><?= $hasil = $x/sqrt($xy[$cc]); ?></td>
                 <?php 
                 $cc++;
                 if ($cc==$jumlah_kriteria) {
@@ -573,7 +585,7 @@ STEP 5
           <a data-toggle="collapse" data-parent="#accordion" href="#collapse5">Step 5 ( Hasil Perkalian Matrix R dengan bobotnya )</a>
         </h4>
       </div>
-      <div id="collapse5" class="panel-collapse collapse <?php echo $p5; ?>">
+      <div id="collapse5" class="panel-collapse collapse <?php //echo $p5; ?>">
         <div class="panel-body">
           <h1>Matrix Y</h1>
  <?php 
@@ -634,7 +646,7 @@ STEP 5
                     $hasil = $xx/sqrt($xy[$cc]);
                     $sifat[$cc] = $kr['sifat'];
                 ?>
-                  <td><?= $matrixY[$x][$cc] = $hasil*$bobot; ?> <br> <?php echo "X = ".$x." - Y = ". $cc; ?></td>
+                  <td><?= $matrixY[$x][$cc] = $hasil*$bobot; ?> <br> <?php //echo "X = ".$x." - Y = ". $cc; ?></td>
                 <?php 
 
                 $cc++;
@@ -677,7 +689,7 @@ STEP 6
           <a data-toggle="collapse" data-parent="#accordion" href="#collapse6">Step 6 ( Hasil Solusi Ideal Positif dan Solusi ideal Negatif )</a>
         </h4>
       </div>
-      <div id="collapse6" class="panel-collapse collapse <?php echo $p6; ?>">
+      <div id="collapse6" class="panel-collapse collapse <?php //echo $p6; ?>">
         <div class="panel-body">
           
           <div class="col-md-6"><h2>Solusi Ideal Positif</h2>
@@ -777,7 +789,7 @@ STEP 7
           <a data-toggle="collapse" data-parent="#accordion" href="#collapse7">Step 7 ( Hasil Jarak Alternatif Solusi Ideal Positif dan Solusi Ideal Negatif) )</a>
         </h4>
       </div>
-      <div id="collapse7" class="panel-collapse collapse <?php echo $p7; ?>">
+      <div id="collapse7" class="panel-collapse collapse <?php //echo $p7; ?>">
         <div class="panel-body">
           
 
@@ -849,7 +861,7 @@ STEP 7
       </div>
     </div>
   </div> 
-</div>
+
 <!------------------------------------------------------------------------- 
 STEP 8
 ------------------------------------------------------------------------- -->
@@ -860,9 +872,19 @@ STEP 8
           <a data-toggle="collapse" data-parent="#accordion" href="#collapse8">Step 8 ( Nilai Preferensi Setiap Alternatif )</a>
         </h4>
       </div>
-      <div id="collapse8" class="panel-collapse collapse <?php echo $p8; ?>">
+      <div id="collapse8" class="panel-collapse collapse <?php //echo $p8; ?>">
         <div class="panel-body">
-
+          Hasil : <br>
+          <?php 
+               for ($x=0; $x < $jumlah_alternatif; $x++) { 
+                 $v = $dnegatif[$x]/($dnegatif[$x]+$dpositif[$x]);
+                 $nilaiv[$x] = $v;
+                 echo "Nilai V". ($x+1) ." = ". $nilaiv[$x] ."<br>";
+               }
+               $nilaiv_rank = $nilaiv;
+               rsort($nilaiv_rank);
+           ?>
+           <br>
            <table class="table table-striped" >
               <thead>
                 <tr>
@@ -873,18 +895,27 @@ STEP 8
               </thead>
               <tbody>
                <?php 
-               for ($x=0; $x < $jumlah_alternatif; $x++) { 
-                 $v = $dnegatif[$x]/($dnegatif[$x]+$dpositif[$x]);
-                 $nilaiv[$x] = $v;
-               }
+               $i=0;
             for ($i=0; $i < $jumlah_alternatif; $i++) { 
+              //while($alter = mysqli_fetch_array($query_alter)){
                 ?>
                 <tr>
-                  <th scope="row">V<?= $i+1; ?> </th>
-                  <td> <?php echo $nilaiv[$i]; ?></td>
-                  <td> </td> 
+                  <th scope="row">V<?php
+                  for ($ia=0; $ia < $jumlah_alternatif; $ia++) { 
+                    if($nilaiv_rank[$i] == $nilaiv[$ia]){
+                       echo $ia+1;
+                       if ($i==0) {
+                         $rank1 = $ia+1;
+                         //$rank_id = $alter['id_alternatif'];
+                       }
+                    }
+                    //echo "<br>". $nilaiv_rank[$i] ." - ".$nilaiv[$ia] ."<br>";
+                  }
+                   ?> </th>
+                  <td> <?php echo $nilaiv_rank[$i]; ?></td>
+                  <td> <?php echo $i+1; ?></td> 
                 </tr>
-              <?php } ?>
+              <?php  } ?>
               </tbody>
             </table>
 
@@ -892,7 +923,7 @@ STEP 8
       </div>
     </div>
   </div> 
-</div>
+
 <!------------------------------------------------------------------------- 
 kesimpulan
 ------------------------------------------------------------------------- -->
@@ -903,9 +934,15 @@ kesimpulan
           <a data-toggle="collapse" data-parent="#accordion" href="#collapse9">Kesimpulan</a>
         </h4>
       </div>
-      <div id="collapse9" class="panel-collapse collapse <?php echo $p9; ?>">
+      <div id="collapse9" class="panel-collapse collapse <?php //echo $p9; ?>">
         <div class="panel-body">
-          555555
+
+          <?php 
+          $kesimpulan = mysqli_query($koneksi, "SELECT * FROM alternatif WHERE id_alternatif='$rank1'");
+          while ($data_kesimpulan = mysqli_fetch_array($kesimpulan)) {
+            echo "<p style='font-size:20px'>Dari nilai preferensi setiap alternatif, <b>V".$rank1."</b> memiliki nilai yang terbesar, Sehingga dapat disimpulkan <b>alternatif ke-".$rank1."</b> yaitu <b>".$data_kesimpulan['nama_alternatif']. "</b> terpilih sebagai solusi pada masalah kali ini</p>";
+          }
+          ?>
 
         </div>
       </div>

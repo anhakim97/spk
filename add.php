@@ -66,8 +66,8 @@
                                                                                 
                                          }
                                        } 
-                // mysqli_close($koneksi);
-                // header("location: index.php?posisi=3");  
+                 mysqli_close($koneksi);
+                 header("location: index.php?posisi=3");  
                 }
             
                ?> 
